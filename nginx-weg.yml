@@ -1,6 +1,6 @@
 ---
 - name: Verwijder NGINX en website bestanden
-  hosts: webservers
+  hosts: ubuntu_servers
   become: yes
   tasks:
     - name: Stop NGINX service
