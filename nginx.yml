@@ -1,0 +1,79 @@
+
+---
+- name: Update alle Ubuntu servers
+  hosts: ubuntu_servers
+  become: True
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+- name: Installeer en configureer Nginx op Ubuntu
+  hosts: all
+  become: yes
+  tasks:
+    - name: Installeer de nieuwste versie van Nginx
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+
+    - name: Start Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+
+- name: Installeren en configureren van Nginx met een welkomstpagina
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Nginx installeren
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Standaard Nginx index.html verwijderen
+      file:
+        path: /var/www/html/index.html
+        state: absent
+
+    - name: Aangepaste welkomstpagina neerzetten
+      copy:
+        dest: /var/www/html/index.html
+        content: |
+          <!DOCTYPE html>
+          <html lang="nl">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Welkom</title>
+          </head>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f0f0f5; color: #333;">
+            <div style="background-color: black; padding: 40px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto;">
+              <h1 style="color: #2c3e50; font-size: 36px; margin-bottom: 10px;">Welkom</h1>
+              <h2 style="color: #3498db; font-size: 28px; margin-bottom: 30px;">Op de zxHOSTING web server</h2>
+              <p style="font-size: 18px; color: #7f8c8d;">copright 2025 by zxHOSTING.NL</p>
+              <hr style="border: 0; height: 2px; background-color: #3498db; width: 50%; margin: 20px auto;" />
+              <p style="font-size: 16px; color: #34495e;">
+                Automatisch uitgerold met Ansible en Nginx
+              </p>
+            </div>
+          </body>
+          </html>
+
+    - name: Nginx service starten en activeren
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+
+
+
+    - name: Reboot the system
+      ansible.builtin.reboot:
