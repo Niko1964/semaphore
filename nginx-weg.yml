@@ -1,4 +1,14 @@
 ---
+- name: Basisinstallatie
+ hosts: all
+ become: yes
+ tasks:
+   - name: Werk systeem bij
+     apt:
+       update_cache: yes
+       upgrade: dist
+       cache_valid_time: 3600
+       
 - name: Verwijder NGINX en website bestanden
   hosts: ubuntu_servers
   become: yes
