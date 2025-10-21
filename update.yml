@@ -1,0 +1,44 @@
+---
+- name: Update alle Ubuntu servers
+  hosts: ubuntu_servers
+  become: True
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+    - name: Set timezone to  Amsterdam
+      command: timedatectl set-timezone Europe/Amsterdam
+      tags: ntp
+
+    - name: Upgrade alle pakketten
+      apt:
+        upgrade: dist
+
+    - name: Verwijder niet meer benodigde pakketten
+      apt:
+        autoremove: yes
+        purge: yes
+
+    - name: Install open-vm-tools voor vmware
+      command: apt-get install open-vm-tools -y
+      tags: ntp
+    - name: Install dnsutils & iputils-ping
+      command: apt-get install dnsutils iputils-ping htop -y
+      tags: ntp
+    - name: nano
+      command: apt-get install nano -y
+      tags: nano
+    - name: Reboot the system
+      ansible.builtin.reboot:
+- name: Voeg NOPASSWD sudo toe voor gebruiker niko
+  hosts: ubuntu_servers
+  become: yes  # we hebben sudo nodig om /etc/sudoers aan te passen
+  tasks:
+    - name: Voeg NOPASSWD regel toe in sudoers
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^niko ALL=\(ALL\) NOPASSWD: ALL'
+        line: 'niko ALL=(ALL) NOPASSWD: ALL'
+        validate: '/usr/sbin/visudo -cf %s'
