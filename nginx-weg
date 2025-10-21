@@ -1,0 +1,26 @@
+---
+- name: Verwijder NGINX en website bestanden
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Stop NGINX service
+      service:
+        name: nginx
+        state: stopped
+
+    - name: Zorg dat NGINX niet geïnstalleerd is
+      apt:
+        name: nginx
+        state: absent
+        purge: yes
+        update_cache: yes
+
+    - name: Verwijder standaard website bestanden
+      file:
+        path: /var/www/html
+        state: absent
+
+    - name: Verwijder NGINX configuratiebestanden
+      file:
+        path: /etc/nginx
+        state: absent
