@@ -26,6 +26,18 @@
     - name: Install dnsutils & iputils-ping
       command: apt-get install dnsutils iputils-ping htop -y
       tags: ntp
+    - name: Installeer basispakketten
+      apt:
+       name:
+         - curl
+         - wget
+         - vim
+         - git
+         - ufw
+         - sudo
+         - python3
+         - python3-pip
+        state: present
     - name: nano
       command: apt-get install nano -y
       tags: nano
