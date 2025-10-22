@@ -27,8 +27,8 @@
       command: apt-get install dnsutils iputils-ping htop -y
       tags: ntp
     - name: Installeer basispakketten
-      command: apt-get install curl wget vim git ufw sudo python3 python3-pip
-        state: present
+      command: apt-get install curl wget vim git ufw sudo python3 python3-pip -y
+      
     - name: nano
       command: apt-get install nano -y
       tags: nano
