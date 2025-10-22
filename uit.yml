@@ -1,0 +1,8 @@
+---
+- name: Zet alle hosts uit
+  hosts: all
+  become: yes
+  tasks:
+    - name: Schakel Linux hosts uit
+      ansible.builtin.command: shutdown now
+      when: ansible_os_family == 'Debian' or ansible_os_family == 'RedHat'
